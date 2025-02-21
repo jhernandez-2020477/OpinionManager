@@ -23,6 +23,10 @@ export const saveComment = async(req, res)=>{
         }
         
         await comment.save()
+        publicationId.comments.push(comment._id);  // Añadir el ID del comentario al array
+        await publicationId.save();  // Guardar la publicación actualizada
+
+
         return res.send(
             {
                 message: `Save Comment successfully`

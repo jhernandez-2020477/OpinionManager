@@ -23,6 +23,12 @@ const publicationSchema = Schema(
             ref: 'User',
             //required: [true, 'User is required']
         },
+        comments :[
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Comment'
+            }
+        ],
         date: { 
             type: Date, 
             default: Date.now 

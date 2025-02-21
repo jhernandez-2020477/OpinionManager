@@ -40,5 +40,11 @@ api.get(
     '/getPublications',
     getAllPublications
 )
+
+//Buscar publicación por nombre 
+api.get(
+    '/getPublications/:name',
+    getAllPublications
+)
 //Exportar
 export default api

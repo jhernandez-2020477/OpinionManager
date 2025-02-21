@@ -2,6 +2,7 @@
 import Publication from '../publication/publication.model.js'
 import Category from '../category/category.model.js'
 import Comment from '../comment/comment.model.js'
+import { populate } from 'dotenv'
 
 
 //Agregar publicación
@@ -70,7 +71,7 @@ export const updatePost = async(req, res)=>{
         }
 
         // Verificar si el usuario autenticado es el autor de la publicación
-        if (publication.author.toString() !== req.user.uid && req.user.role !== 'ADMIN') {
+        if (publication.author.toString() !== req.user.uid) {
             return res.status(403).send(
                 {
                     success: false,
@@ -170,6 +171,16 @@ export const getAllPublications = async(req, res) => {
                     select: 'name surname -_id'
                 }      
             )
+            .populate(
+                {
+                    path: 'comments',
+                    select: 'content author -_id',
+                    populate: {
+                        path: 'author', 
+                        select: 'name surname -_id'
+                    }
+                }      
+            )
 
         if (publications.length === 0) {
             return res.send(
@@ -200,3 +211,60 @@ export const getAllPublications = async(req, res) => {
     }
 }
 
+//Buscar Publicación por nombre
+export const getPostByName = async(req, res)=>{
+    const { title } = req.query
+    try {
+        const publication = await Publication.find(
+            {
+                title: { $regex: title, $options: 'i'}
+            }
+        )
+        .populate(
+            {
+                path: 'category',
+                select: 'name description -_id'
+            }
+        )
+        .populate(
+            {
+                path: 'author',
+                select: 'name surname -_id'
+            }      
+        )
+        .populate(
+            {
+                path: 'comments',
+                select: 'content author -_id',
+                populate: {
+                    path: 'author', 
+                    select: 'name surname -_id'
+                }
+            }      
+        )
+        if(publication.length === 0){
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'No publications found with that title.'
+                }
+            )
+        }
+        return res.send(
+            {
+                success: true,
+                message: 'Publication(s) found.',
+                publications: publication
+            }
+        )
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'General Error',
+                err
+            }
+        )
+    }
+}
