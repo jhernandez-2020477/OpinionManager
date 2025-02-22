@@ -9,7 +9,7 @@ import { populate } from 'dotenv'
 export const savePost = async(req, res)=>{
     try {
 
-        const { category } = req.body
+        const { title, category } = req.body
         let data = req.body
         data.author = req.user.uid
 
@@ -20,6 +20,21 @@ export const savePost = async(req, res)=>{
                 {
                     success: false,
                     message: 'Category not found, cannot save this publication'
+                }
+            )
+        }
+
+         // Verificar si ya existe una publicación con el mismo título
+         const existingPublication = await Publication.findOne(
+            { 
+                title: title 
+            }
+        )
+        if(existingPublication) {
+             return res.status(400).send(
+                {
+                    success: false,
+                    message: 'A publication with this title already exists'
                 }
             )
         }
@@ -213,7 +228,7 @@ export const getAllPublications = async(req, res) => {
 
 //Buscar Publicación por nombre
 export const getPostByName = async(req, res)=>{
-    const { title } = req.query
+    const { title } = req.params
     try {
         const publication = await Publication.find(
             {

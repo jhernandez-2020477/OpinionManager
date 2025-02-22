@@ -125,17 +125,17 @@ export const deleteCategory = async(req, res) => {
             }
         )
 
-        // Si hay publicaciones, actualizamos su categoría a la categoría por defecto
+        // Si hay publicaciones, se actualiza su categoría a la categoría por defecto
         if (postsToUpdate.length > 0) {
             await Publication.updateMany(
                 { category: id },
                 { $set: { category: defaultCate._id } }
             )
-            console.log(`${postsToUpdate.length} posts updated to default category`);
+            console.log(`${postsToUpdate.length} posts updated to default category`)
         }
 
         // Eliminar la categoría
-        let deletedCategory = await Category.findByIdAndDelete(id);
+        let deletedCategory = await Category.findByIdAndDelete(id)
 
         if (!deletedCategory) {
             return res.status(404).send(

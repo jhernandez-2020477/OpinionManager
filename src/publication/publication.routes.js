@@ -1,6 +1,6 @@
 //Rutas de auntentificación
 import { Router } from "express";
-import { deletePost, getAllPublications, savePost, updatePost } from "./publication.controller.js";
+import { deletePost, getAllPublications, getPostByName, savePost, updatePost } from "./publication.controller.js";
 import { validateJwt } from "../../middlewares/validate.jwt.js";
 import { validSavePost, validUpdatePost } from "../../helpers/validators.js";
 
@@ -43,8 +43,8 @@ api.get(
 
 //Buscar publicación por nombre 
 api.get(
-    '/getPublications/:name',
-    getAllPublications
+    '/getPublications/:title',
+    getPostByName
 )
 //Exportar
 export default api
