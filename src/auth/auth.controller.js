@@ -22,7 +22,7 @@ export const initAdminUser = async(req, res) => {
                 surname: 'Hernández',
                 username: 'jhernandez',
                 email: 'jhernan@gmail.com',
-                password: '1024578@Vv0412', // Utiliza una contraseña segura en producción
+                password: '1024578@Vv0412', 
                 role: 'ADMIN'
             }
 
